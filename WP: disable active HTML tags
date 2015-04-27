@@ -1,0 +1,29 @@
+/*
+This will only disable active HTML tags. So someone can still post something like:
+&lt;a&gt;&lt;em&gt;&lt;strong&gt;
+And it will show up, but the tags will not be functional. So if someone uses the strong tag, it won’t bold the text.
+Besides, not many SPAM bots have time to do this because this way takes up a lot of time and it is not beneficial for them.
+All you have to do is simply open your functions.php and add the following code:
+*/
+    
+    
+    // This will occur when the comment is posted
+    function plc_comment_post( $incoming_comment ) {
+
+    // convert everything in a comment to display literally
+    $incoming_comment['comment_content'] = htmlspecialchars($incoming_comment['comment_content']);
+
+    // the one exception is single quotes, which cannot be #039; because WordPress marks it as spam
+    $incoming_comment['comment_content'] = str_replace( "'", '&apos;', $incoming_comment['comment_content'] );
+
+    return( $incoming_comment );
+    }
+
+    // This will occur before a comment is displayed
+    function plc_comment_display( $comment_to_display ) {
+
+    // Put the single quotes back in
+    $comment_to_display = str_replace( '&apos;', "'", $comment_to_display );
+
+    return $comment_to_display;
+}
